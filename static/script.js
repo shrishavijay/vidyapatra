@@ -1,13 +1,6 @@
-// Your paper data — 6 objects in an array
+// Your paper data — 7 objects in an array
 // Each object has: subject, college, stream, year, board
-const papers = [
-    { subject: "Physics", college: "St. Joseph's College", stream: "science", year: "2024", board: "PUC" },
-    { subject: "Chemistry", college: "Christ College", stream: "science", year: "2023", board: "PUC" },
-    { subject: "Mathematics", college: "St. Joseph's College", stream: "science", year: "2024", board: "PUC" },
-    { subject: "Accountancy", college: "MES College", stream: "commerce", year: "2023", board: "PUC" },
-    { subject: "Business Studies", college: "St. Joseph's College", stream: "commerce", year: "2024", board: "PUC" },
-    { subject: "History", college: "Jyoti Nivas College", stream: "arts", year: "2023", board: "PUC" },
-  ];
+
   
   // Tell JS which HTML elements to watch and which to fill
   const searchInput = document.getElementById("search");
@@ -30,7 +23,7 @@ const papers = [
   }
   
   // This function filters the array and re-renders all cards
-  function renderCards() {
+  function renderCards(papers) {
     const searchTerm = searchInput.value.toLowerCase();
     const selectedStream = streamFilter.value;
   
@@ -52,12 +45,12 @@ const papers = [
       container.innerHTML = filtered.map(createCard).join("");
     }
   }
+    async function loadPapers() {
+      const response = await fetch("/papers");
+      const papers = await response.json();
+      renderCards(papers);
+  }
   
-  // Run once on page load to show all cards
-  renderCards();
-  
-  // Every time the user types, re-run
-  searchInput.addEventListener("input", renderCards);
-  
-  // Every time the dropdown changes, re-run
-  streamFilter.addEventListener("change", renderCards);
+  loadPapers();
+  searchInput.addEventListener("input", () => loadPapers());
+  streamFilter.addEventListener("change", () => loadPapers());
