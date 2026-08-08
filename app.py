@@ -1,31 +1,61 @@
-# This imports Flask — the web framework
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
 
-# This creates your Flask app
 app = Flask(__name__)
 
-# This is your paper data — same as your JS array before
-# Soon this will come from a real database
-papers = [
-    {"subject": "Physics", "college": "St. Joseph's College", "stream": "science", "year": "2024", "board": "PUC"},
-    {"subject": "Chemistry", "college": "Christ College", "stream": "science", "year": "2023", "board": "PUC"},
-    {"subject": "Mathematics", "college": "St. Joseph's College", "stream": "science", "year": "2024", "board": "PUC"},
-    {"subject": "Accountancy", "college": "MES College", "stream": "commerce", "year": "2023", "board": "PUC"},
-    {"subject": "Business Studies", "college": "St. Joseph's College", "stream": "commerce", "year": "2024", "board": "PUC"},
-    {"subject": "History", "college": "Jyoti Nivas College", "stream": "arts", "year": "2023", "board": "PUC"},
-    {"subject": "STEM", "college": "Vedantha PU College", "stream": "engineering", "year": "2024", "board": "PUC"},
-]
+# This tells Flask where to create the database file
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///vidyapatra.db"
+db = SQLAlchemy(app)
 
-# This is a ROUTE — when someone visits your homepage, Flask runs this function
+# This is your database table defined as a Python class
+# Each variable = one column in the table
+class Paper(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    subject = db.Column(db.String(100), nullable=False)
+    college = db.Column(db.String(100), nullable=False)
+    stream = db.Column(db.String(50), nullable=False)
+    year = db.Column(db.String(10), nullable=False)
+    board = db.Column(db.String(50), nullable=False)
+
+    # This converts one Paper object into a dictionary
+    # So Flask can turn it into JSON
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "subject": self.subject,
+            "college": self.college,
+            "stream": self.stream,
+            "year": self.year,
+            "board": self.board,
+        }
+
+# Homepage route
 @app.route("/")
 def home():
     return render_template("index.html")
 
-# This is an API route — when the frontend asks for papers, Flask returns them as JSON
+# GET all papers from the database
 @app.route("/papers")
 def get_papers():
-    return jsonify(papers)
+    papers = Paper.query.all()
+    return jsonify([p.to_dict() for p in papers])
 
-# This starts the server
+# POST a new paper to the database
+@app.route("/papers/add", methods=["POST"])
+def add_paper():
+    data = request.get_json()
+    new_paper = Paper(
+        subject=data["subject"],
+        college=data["college"],
+        stream=data["stream"],
+        year=data["year"],
+        board=data["board"],
+    )
+    db.session.add(new_paper)
+    db.session.commit()
+    return jsonify(new_paper.to_dict()), 201
+
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)
