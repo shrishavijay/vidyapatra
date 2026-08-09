@@ -84,10 +84,20 @@
     width: calc(33.33% - 11px);
     cursor: pointer;
     transition: box-shadow 0.2s;
+    text-decoration: none;
+    color: inherit;
+    display: block;
   }
   
   .paper-card:hover {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+
+  .card-action {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #3182ce;
   }
   
   .card-subject {

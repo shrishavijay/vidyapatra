@@ -9,8 +9,11 @@
   
   // This function builds the HTML for ONE card and returns it as text
   function createCard(paper) {
+    const link = paper.file_url ? paper.file_url : "#";
+    const label = paper.file_url ? "View Paper →" : "Coming soon";
+  
     return `
-      <div class="paper-card">
+      <a href="${link}" target="_blank" class="paper-card">
         <div class="card-subject">${paper.subject}</div>
         <div class="card-college">${paper.college}</div>
         <div class="card-meta">
@@ -18,7 +21,8 @@
           <span class="tag">${paper.year}</span>
           <span class="tag">${paper.board}</span>
         </div>
-      </div>
+        <div class="card-action">${label}</div>
+      </a>
     `;
   }
   

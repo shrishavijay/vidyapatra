@@ -16,6 +16,7 @@ class Paper(db.Model):
     stream = db.Column(db.String(50), nullable=False)
     year = db.Column(db.String(10), nullable=False)
     board = db.Column(db.String(50), nullable=False)
+    file_url = db.Column(db.String(300))   
 
     # This converts one Paper object into a dictionary
     # So Flask can turn it into JSON
@@ -27,6 +28,7 @@ class Paper(db.Model):
             "stream": self.stream,
             "year": self.year,
             "board": self.board,
+            "file_url": self.file_url,   # NEW
         }
 
 # Homepage route
