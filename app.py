@@ -36,6 +36,10 @@ class Paper(db.Model):
 def home():
     return render_template("index.html")
 
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 # GET all papers from the database
 @app.route("/papers")
 def get_papers():

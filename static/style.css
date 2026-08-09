@@ -134,6 +134,30 @@
     color: #718096;
     font-size: 14px;
   }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: #3182ce;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .about-section {
+    margin-bottom: 28px;
+  }
+  
+  .about-section h2 {
+    font-size: 18px;
+    color: #2d3748;
+    margin-bottom: 8px;
+  }
+  
+  .about-section p {
+    font-size: 14px;
+    color: #4a5568;
+    line-height: 1.7;
+  }
   
   /* ---- MOBILE (screens under 768px) ---- */
   @media (max-width: 768px) {
